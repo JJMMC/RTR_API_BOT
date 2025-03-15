@@ -1,4 +1,4 @@
-from sqlalchemy import select, join
+from sqlalchemy import select, join, delete
 from scripts.dbsetup import get_session
 from app.models import Articulo, HistorialPrecio
 
@@ -74,4 +74,16 @@ def obtener_articulos_por_categoria(categoria):
         session.close()
 
 
-
+### NUEVA FUNCIÓN PARA ELIMINAR FILAS POR FECHA ###
+def delete_rows_by_date(fecha):
+    session = get_session()
+    try:
+        stmt = delete(HistorialPrecio).where(HistorialPrecio.fecha == fecha)
+        result = session.execute(stmt)
+        session.commit()
+        print(f"Se eliminaron {result.rowcount} filas con la fecha {fecha}")
+    except Exception as e:
+        session.rollback()
+        print(f"Error: {e}")
+    finally:
+        session.close()
