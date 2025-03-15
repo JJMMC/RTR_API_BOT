@@ -1,0 +1,12 @@
+# macOS
+.DS_Store
+
+# Scripts y archivos
+complete_to_alchemy.py
+estructura.txt
+
+# Python
+__pycache__/
+
+# Virtual Environment
+venv/
