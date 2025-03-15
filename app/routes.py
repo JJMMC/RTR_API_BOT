@@ -2,7 +2,7 @@ from app import app, db
 from flask import request, jsonify, render_template
 from app.models import Articulo, HistorialPrecio
 from sqlalchemy import select
-from scripts.sqlalch_queries import get_session
+from scripts.dbsetup import get_session
 
 @app.route('/')
 def index():

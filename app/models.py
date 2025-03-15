@@ -9,7 +9,7 @@ from sqlalchemy.orm import DeclarativeBase
 
 
 # Configurar la base de datos en memoria
-engine = create_engine('sqlite:///database/rtr_crawler_Alchemy.db')#echo=True echo=true para depuración de código
+#engine = create_engine('sqlite:///database/rtr_crawler_Alchemy.db')#echo=True echo=true para depuración de código
 
 
 # Definir la base declarativa
@@ -42,8 +42,6 @@ class HistorialPrecio(Base):
     # Relación con Articulos
     articulo: Mapped["Articulo"] = relationship(back_populates="historial")
     
-# Crear todas las tablas en la base de datos
-#Base.metadata.create_all(engine)   
 
 
 

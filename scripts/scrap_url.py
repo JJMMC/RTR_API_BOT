@@ -5,6 +5,7 @@ from datetime import datetime
 
 discipline_url = 'https://www.rtrvalladolid.es/87-crawler'
 
+## GENERADORES ##
 #Función generador de sopas
 def soup_generator(url):
     try:
@@ -17,6 +18,8 @@ def soup_generator(url):
         print(f"Error fetching {url}: {e}")
         return None
 
+
+## OBTENIENDO URLS ##
 # Función para obtener las CAT y CAT_URLS
 def request_categorias_and_main_urls(url="https://www.rtrvalladolid.es/87-crawler"):
     soup = soup_generator(url)
