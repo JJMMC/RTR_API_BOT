@@ -45,10 +45,17 @@ def comparar_precio_fechas():
     for rtr_id, ultimo_precio, nombre, categoria in datos_ultima_fecha:
         penultimo_precio, _, _ = penultima_fecha_dict.get(rtr_id, (None, None, None))
         if penultimo_precio is not None and ultimo_precio != penultimo_precio:
-            cambios_de_precio.append((rtr_id, nombre, categoria, penultimo_precio, ultimo_precio))
+            cambios_de_precio.append({
+                'rtr_id': rtr_id,
+                'nombre': nombre,
+                'categoria': categoria,
+                'penultimo_precio': penultimo_precio,
+                'ultimo_precio': ultimo_precio
+            })
 
-    if cambios_de_precio:
-        print(f"Cambios de precios entre {penultima_fecha} y {ultima_fecha}:")
-        for rtr_id, nombre, categoria, penultimo_precio, ultimo_precio in cambios_de_precio:
-            print(f"RTR ID: {rtr_id}, Nombre: {nombre}, Categoría: {categoria}, Precio anterior: {penultimo_precio}, Precio actual: {ultimo_precio}")
+    return cambios_de_precio
+    # if cambios_de_precio:
+    #     print(f"Cambios de precios entre {penultima_fecha} y {ultima_fecha}:")
+    #     for rtr_id, nombre, categoria, penultimo_precio, ultimo_precio in cambios_de_precio:
+    #         print(f"RTR ID: {rtr_id}, Nombre: {nombre}, Categoría: {categoria}, Precio anterior: {penultimo_precio}, Precio actual: {ultimo_precio}")
 

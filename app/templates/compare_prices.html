@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Comparación de Precios</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>Comparación de Precios</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>RTR ID</th>
+                <th>Nombre</th>
+                <th>Categoría</th>
+                <th>Precio Anterior</th>
+                <th>Precio Actual</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for cambio in cambios_de_precio %}
+            <tr>
+                <td>{{ cambio.rtr_id }}</td>
+                <td>{{ cambio.nombre }}</td>
+                <td>{{ cambio.categoria }}</td>
+                <td>{{ cambio.penultimo_precio }}</td>
+                <td>{{ cambio.ultimo_precio }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
