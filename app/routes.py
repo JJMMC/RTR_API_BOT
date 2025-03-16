@@ -5,14 +5,65 @@ from sqlalchemy import select
 from scripts.dbsetup import get_session
 from scripts.compare_prices import comparar_precio_ultimas_fechas
 
+
 @app.route('/')
 def index():
-    return ''' "Base Datos RTR" '''
+    return render_template('index.html', title="Home")
+
+@app.route('/consulta', methods=['GET', 'POST'])
+def consulta():
+    session = get_session()
+    try:
+        categorias = session.query(Articulo.categoria).distinct().all()
+        fechas = session.query(HistorialPrecio.fecha).join(Articulo, HistorialPrecio.rtr_id == Articulo.rtr_id).distinct().all()
+        categorias = [c[0] for c in categorias]
+        fechas = [f[0] for f in fechas]
+        
+        # Formatear las fechas como día-mes-año
+        fechas_formateadas = [fecha.strftime("%d-%m-%Y") for fecha in fechas]
+        
+        if request.method == 'POST':
+            categoria = request.form.get('categoria')
+            fecha = request.form.get('fecha')
+            resultados = session.query(HistorialPrecio).join(Articulo, HistorialPrecio.rtr_id == Articulo.rtr_id).filter(
+                Articulo.categoria == categoria,
+                HistorialPrecio.fecha == fecha
+            ).all()
+            return render_template('consulta.html', categorias=categorias, fechas=fechas_formateadas, resultados=resultados, title="Consulta")
+        
+        return render_template('consulta.html', categorias=categorias, fechas=fechas_formateadas, title="Consulta")
+    
+    except Exception as e:
+        return jsonify({"error": str(e)})
+    
+    finally:
+        session.close()
+
+
+
+@app.route('/compare_prices')
+def compare_prices():
+    cambios_de_precio = comparar_precio_ultimas_fechas()
+    return render_template('compare_prices.html', cambios_de_precio=cambios_de_precio)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 ### PARTE DE JSON ###
 #Todos los artículos
-@app.route('/articulos', methods=['GET'])
+@app.route('/json/articulos', methods=['GET'])
 def get_articulos():
     session = get_session()
     try:
@@ -31,7 +82,7 @@ def get_articulos():
 
 
 #Artículos por rtr_id        
-@app.route('/articulos/<rtr_id>', methods=['GET'])
+@app.route('/json/articulos/<rtr_id>', methods=['GET'])
 def articulos_por_id(rtr_id):
     session = get_session()
     try:
@@ -51,7 +102,7 @@ def articulos_por_id(rtr_id):
 
 
 # Artículo por categoria
-@app.route('/categoria/<cat>', methods=['GET'])
+@app.route('/json/categoria/<cat>', methods=['GET'])
 def articulos_por_cat(cat):
     session = get_session()
     try:
@@ -70,34 +121,4 @@ def articulos_por_cat(cat):
         
 
 
-### PARTE DE HTML ###
-@app.route('/index_web')
-def index_web():
-    return render_template('index.html', title="Home")
-
-@app.route('/index_web/consulta', methods=['GET'])
-def web_consulta():
-    session = get_session()
-    try:
-        categorias = session.query(Articulo.categoria).distinct().all()
-        fechas = session.query(HistorialPrecio.fecha).join(Articulo, HistorialPrecio.rtr_id == Articulo.rtr_id).distinct().all()
-        categorias = [c[0] for c in categorias]
-        fechas = [f[0] for f in fechas]
-        
-        # Formatear las fechas como día-mes-año
-        fechas_formateadas = [fecha.strftime("%d-%m-%Y") for fecha in fechas]
-        
-        return render_template('consulta.html', categorias=categorias, fechas=fechas_formateadas, title="Consulta")
-    
-    except Exception as e:
-        return jsonify({"error": str(e)})
-    
-    finally:
-        session.close()
-
-
-@app.route('/compare_prices')
-def compare_prices():
-    cambios_de_precio = comparar_precio_ultimas_fechas()
-    return render_template('compare_prices.html', cambios_de_precio=cambios_de_precio)
 

@@ -7,22 +7,5 @@ from scripts.compare_prices import get_todos_datos_por_rtrid
 
 
 if __name__ == "__main__":
-    #plot_evo_precio(3686)
-    #print(get_todos_rtrids())
-    #print(get_todos_datos_por_rtrid(6744))
-    #print(comparar_precio_fechas())
-    # print(get_todos_datos_por_rtrid(3686)[0])
-    #print(detectar_cambios_precio_en_historico())
-    # print(detectar_cambios_precio_en_historico())
-    # print(len(detectar_cambios_precio_en_historico()))
 
-    result = detectar_cambios_precio_en_historico()
-    for i in result:
-        print(i)
-    print(len(result))
-
-
-
-
-
-    #app.run(debug=True)
+    app.run(debug=True)
