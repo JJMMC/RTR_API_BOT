@@ -3,7 +3,7 @@ from flask import request, jsonify, render_template
 from app.models import Articulo, HistorialPrecio
 from sqlalchemy import select
 from scripts.dbsetup import get_session
-from scripts.compare_prices import comparar_precio_fechas
+from scripts.compare_prices import comparar_precio_ultimas_fechas
 
 @app.route('/')
 def index():
@@ -98,6 +98,6 @@ def web_consulta():
 
 @app.route('/compare_prices')
 def compare_prices():
-    cambios_de_precio = comparar_precio_fechas()
+    cambios_de_precio = comparar_precio_ultimas_fechas()
     return render_template('compare_prices.html', cambios_de_precio=cambios_de_precio)
 
