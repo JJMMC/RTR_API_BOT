@@ -10,36 +10,6 @@ from scripts.compare_prices import comparar_precio_ultimas_fechas
 def index():
     return render_template('index.html', title="Home")
 
-@app.route('/consulta', methods=['GET', 'POST'])
-def consulta():
-    session = get_session()
-    try:
-        categorias = session.query(Articulo.categoria).distinct().all()
-        fechas = session.query(HistorialPrecio.fecha).join(Articulo, HistorialPrecio.rtr_id == Articulo.rtr_id).distinct().all()
-        categorias = [c[0] for c in categorias]
-        fechas = [f[0] for f in fechas]
-        
-        # Formatear las fechas como día-mes-año
-        fechas_formateadas = [fecha.strftime("%d-%m-%Y") for fecha in fechas]
-        
-        if request.method == 'POST':
-            categoria = request.form.get('categoria')
-            fecha = request.form.get('fecha')
-            resultados = session.query(HistorialPrecio).join(Articulo, HistorialPrecio.rtr_id == Articulo.rtr_id).filter(
-                Articulo.categoria == categoria,
-                HistorialPrecio.fecha == fecha
-            ).all()
-            return render_template('consulta.html', categorias=categorias, fechas=fechas_formateadas, resultados=resultados, title="Consulta")
-        
-        return render_template('consulta.html', categorias=categorias, fechas=fechas_formateadas, title="Consulta")
-    
-    except Exception as e:
-        return jsonify({"error": str(e)})
-    
-    finally:
-        session.close()
-
-
 
 @app.route('/compare_prices')
 def compare_prices():
