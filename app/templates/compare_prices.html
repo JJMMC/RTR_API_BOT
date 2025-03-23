@@ -4,14 +4,39 @@
 
 {% block content %}
     <h1>Comparación de Precios</h1>
+
+    <!-- Formulario para seleccionar las fechas -->
+    <form method="POST">
+        <label for="fecha1">Selecciona la primera fecha:</label>
+        <select name="fecha1" id="fecha1" required>
+            <option value="" disabled selected>Elige una fecha</option>
+            {% for fecha in fechas_disponibles %}
+            <option value="{{ fecha }}">{{ fecha }}</option>
+            {% endfor %}
+        </select>
+
+        <label for="fecha2">Selecciona la segunda fecha:</label>
+        <select name="fecha2" id="fecha2" required>
+            <option value="" disabled selected>Elige una fecha</option>
+            {% for fecha in fechas_disponibles %}
+            <option value="{{ fecha }}">{{ fecha }}</option>
+            {% endfor %}
+        </select>
+
+        <button type="submit">Comparar</button>
+    </form>
+
+    <!-- Mostrar resultados de la comparación -->
+    {% if cambios_de_precio %}
+    <h2>Resultados de la Comparación</h2>
     <table>
         <thead>
             <tr>
                 <th>RTR ID</th>
                 <th>Nombre</th>
                 <th>Categoría</th>
-                <th>Precio Anterior</th>
-                <th>Precio Actual</th>
+                <th>Precio ({{ fecha1 }})</th>
+                <th>Precio ({{ fecha2 }})</th>
             </tr>
         </thead>
         <tbody>
@@ -26,4 +51,5 @@
             {% endfor %}
         </tbody>
     </table>
+    {% endif %}
 {% endblock %}
