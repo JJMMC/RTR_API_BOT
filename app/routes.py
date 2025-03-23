@@ -47,8 +47,19 @@ def compare_prices():
 
 @app.route('/articulo/<int:rtr_id>')
 def articulo_detalle(rtr_id):
-    pass
-
+    session = get_session()
+    try:
+        stmt = select(Articulo).where(Articulo.rtr_id == rtr_id)
+        articulo = session.execute(stmt).scalar_one_or_none()
+        
+        if articulo is None:
+            return "Artículo no encontrado", 404
+        
+        return render_template('articulo.html', articulo=articulo)
+    except Exception as e:
+        return str(e), 500
+    finally:
+        session.close()
 
 
 
