@@ -3,7 +3,10 @@ from flask import request, jsonify, render_template
 from app.models import Articulo, HistorialPrecio
 from sqlalchemy import select
 from scripts.dbsetup import get_session
-from scripts.compare_prices import comparar_precio_ultimas_fechas
+from scripts.compare_prices import comparar_precio_ultimas_fechas, get_todos_datos_por_rtrid
+import matplotlib.pyplot as plt
+import io
+import base64
 
 
 @app.route('/')
@@ -15,6 +18,10 @@ def index():
 def compare_prices():
     cambios_de_precio = comparar_precio_ultimas_fechas()
     return render_template('compare_prices.html', cambios_de_precio=cambios_de_precio)
+
+@app.route('/articulo/<int:rtr_id>')
+def articulo_detalle(rtr_id):
+    pass
 
 
 

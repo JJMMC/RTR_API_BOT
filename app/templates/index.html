@@ -3,5 +3,11 @@
 {% block title %}Inicio{% endblock %}
 
 {% block content %}
-
+    <h1>Bienvenido a RTR API Bot</h1>
+    <p>Esta aplicación te permite comparar precios de artículos, visualizar su evolución en el tiempo y acceder a detalles específicos de cada producto. 
+       Es una herramienta útil para monitorear cambios de precios y tomar decisiones informadas.</p>
+    <p>Explora las funcionalidades disponibles:</p>
+    <ul>
+        <li><a href="{{ url_for('compare_prices') }}">Comparar precios</a></li>
+    </ul>
 {% endblock %}

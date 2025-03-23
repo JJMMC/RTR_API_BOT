@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}Ficha de artículo{% endblock %}
+
+{% block content %}
+    <h1>Detalles del Artículo</h1>
+    <p><strong>Nombre:</strong> {{ articulo.nombre }}</p>
+    <p><strong>Categoría:</strong> {{ articulo.categoria }}</p>
+    <p><strong>EAN:</strong> {{ articulo.ean }}</p>
+    <p><strong>URL del Artículo:</strong> <a href="{{ articulo.art_url }}" target="_blank">{{ articulo.art_url }}</a></p>
+    <p><strong>URL de la Imagen:</strong> <a href="{{ articulo.img_url }}" target="_blank">{{ articulo.img_url }}</a></p>
+    <img src="{{ articulo.img_url }}" alt="Imagen del artículo" style="max-width: 100%; height: auto;">
+    <h2>Evolución del Precio</h2>
+    <img src="data:image/png;base64,{{ img_base64 }}" alt="Evolución del Precio">
+    <h2>Historial de Precios</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Fecha</th>
+                <th>Precio</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for dato in datos %}
+            <tr>
+                <td>{{ dato[2] }}</td>
+                <td>{{ dato[1] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
