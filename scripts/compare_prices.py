@@ -3,7 +3,9 @@ from scripts.dbsetup import get_session
 from app.models import Articulo, HistorialPrecio
 import matplotlib.pyplot as plt
 
+##################################### FUNCIONES PARA COMPARAR LAS 2 ULTIMAS FECHAS DE LA BASE DE DATOS
 
+# Obtenemos las 2 ultimas fechas de la BD. Retorna SQLALCHEMY RESULT OBJECT
 def get_dos_ultimas_fechas():
     session = get_session()
     try:
@@ -15,7 +17,7 @@ def get_dos_ultimas_fechas():
     finally:
         session.close()
 
-
+# Obtenemos rtr_id,precio,nombre y categoria de TODOS RTR_ID en una determinada FECHA
 def get_todos_datos_por_fecha(fecha):
     session = get_session()
     try:
@@ -29,7 +31,7 @@ def get_todos_datos_por_fecha(fecha):
     finally:
         session.close()
 
-
+# Obtenemos rtr_id,precio,nombre y categoria de TODAS LAS FECHAS de un determinado RTR_ID
 def get_todos_datos_por_rtrid(rtr_id):
     session = get_session()
     try:
@@ -54,7 +56,7 @@ def get_todos_datos_por_rtrid(rtr_id):
     finally:
         session.close()
 
-
+# Función que compara los precios de TODOS los RTR_ID de las 2 ULTIMAS FECHAS y Muestra las diferencias
 def comparar_precio_ultimas_fechas():
     fechas = get_dos_ultimas_fechas()
     if len(fechas) < 2:
@@ -85,7 +87,21 @@ def comparar_precio_ultimas_fechas():
     #     for rtr_id, nombre, categoria, penultimo_precio, ultimo_precio in cambios_de_precio:
     #         print(f"RTR ID: {rtr_id}, Nombre: {nombre}, Categoría: {categoria}, Precio anterior: {penultimo_precio}, Precio actual: {ultimo_precio}")
 
+##################################### FUNCIONES ADICIONALES ##########################################
 
+# Obtener todas las fechas disponibles en la base de datos
+def get_todas_fechas_distintas():
+    session = get_session()
+    try:
+        stmt = select(HistorialPrecio.fecha).distinct().order_by(HistorialPrecio.fecha.desc())
+        fechas_disponibles = [fecha[0] for fecha in session.execute(stmt).all()]
+        return fechas_disponibles
+    except Exception as e:
+        print(f"Error: {e}")
+    finally:
+        session.close()
+
+# Dado un RTR_ID te dibuja un gráfico de la evolucion del PRECIO por FECHAS
 def plot_evo_precio(rtr_id):
     datos = get_todos_datos_por_rtrid(rtr_id)
     if not datos:
@@ -108,8 +124,7 @@ def plot_evo_precio(rtr_id):
     plt.tight_layout()
     plt.show()
 
-#####################################
-
+# Obtenemos TODOS los RTR_IDS declarados en la DB
 def get_todos_rtrids():
     session = get_session()
     try:
@@ -152,5 +167,23 @@ def detectar_cambios_precio_en_historico():
     return lst_art_con_cambios
 
 
+# Comparar precios entre las dos fechas seleccionadas
+def comparar_precio_dos_fechas(fecha1, fecha2):
+    cambios_de_precio = []
+    datos_fecha1 = get_todos_datos_por_fecha(fecha1)
+    datos_fecha2 = get_todos_datos_por_fecha(fecha2)
 
+    fecha1_dict = {rtr_id: (precio, nombre, categoria) for rtr_id, precio, nombre, categoria in datos_fecha1}
+
+    for rtr_id, precio2, nombre, categoria in datos_fecha2:
+        precio1, _, _ = fecha1_dict.get(rtr_id, (None, None, None))
+        if precio1 is not None and precio1 != precio2:
+            cambios_de_precio.append({
+                'rtr_id': rtr_id,
+                'nombre': nombre,
+                'categoria': categoria,
+                'penultimo_precio': precio1,
+                'ultimo_precio': precio2
+            })
+    return cambios_de_precio
 

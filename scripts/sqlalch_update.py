@@ -1,9 +1,9 @@
 from sqlalchemy import insert, select, join
-from sqlalchemy.orm import sessionmaker
+#from sqlalchemy.orm import sessionmaker
 from app.models import Articulo, HistorialPrecio
 from scripts.dbsetup import get_session
 from scripts.scrap_url import scrap_rtr_crawler, scrap_rtr_crawler_by_cat
-from datetime import datetime
+#from datetime import datetime
 
 
 ### FUNCIONES CONVERSION ###
@@ -130,7 +130,7 @@ def insert_scraped(list_products=None):
                 print('Todo Correcto. Insertando precio....')
                 insert_precio(product)
             else:
-                print('Revisar')
+                print('Revisar',product,'Ya importado?')
         
 # Main Update insert Funccion
 def update_scraped():
